@@ -114,3 +114,46 @@ Final Summary (Modified LeNet-5)
 | + Normalization     |        64.00% |
 | + BatchNorm         |        66.00% |
 | + Dropout           |        66.94% |
+
+
+
+So My Next model is 
+
+<img Conv 32→Conv 64 →MP→Dropout→Conv 64 → Flatten(12544) → FC128 → FC10 >
+Model Parameters : (xx)
+Just the raw Model with no regularization just relu activation, normalized input and each batch output also normalized ( batch normalized ) gave accuracy of 72.98 % accuracy. That's the 8 % increased. But the most important thing to see is the Train accuracy which as 99.062 % that strongly suggest the high number of parameter cause the model and lack of proper trianing data and regularization  and memorise based on the train images and not generalized which resulted in poor performance on test dataset. 
+
+#graph pq12 (epoch vs loss, epoch vs accuracy , cnf mat)
+
+This is a classis example of overfitting which is caused in complex model. We use regulaziation to improve model ability to generalize but constraining model capability and forcing it to learn feautres instead of memorising. 
+I implemented few of them and measued the metric, estimated time per epoch and tried to reason out why they helped. 
+
+My first instinct was too try max pooling [After second convulational layer] as it might help by reducing the traslational invariance. We reducing the model parameters by x(__) 
+The most suprising thing was per epooch average training time reduced from ~26sec to ~18.5sec 
+But this alone didn't gave a huge improvement in performance of the model 
+Test Acc : 75.66 % , Train acc 98.46 %
+
+Next I tried Dropout. 
+
+To determine the best dropout placement, I divided the experiments into three cases:
+
+Case 1: Dropout after the first convolution layer.
+Case 2: Dropout after the second convolution layer.
+Case 3: Dropout after both the first and second convolution layers. 
+
+Case 1 didn't gave any performance boost, Infact it dropped down by 2 % ( 73.91 % )
+Probable reason is ... 
+
+Case 2 Gave some improvement 78.59 % that's a 2.9 % improvement not a lot.
+But the gererelization gap was still big, Model's training accuracy was 99.96% 
+
+
+
+So I tried to Augementation which gave a huge performance boost 85.05 % on Test data and 87.87 %, highly significantly increasing the accuracy and reducing overfitting. 
+
+Why did Augementation helped? 
+So augementation helped in incrreasing variance and changing input for example cropping, shifting or flipping. This make model to caputre features instead of remembering if something is exactly at same position then predict it. So when so transformed or different positioned similar object is used model remeber its features and not same reapted pattern or noise 
+
+I tried to remove Max Pool expecting model's performance increase at cost of compute and memory increase but model performance decreased by ~2 % and avg epoch time ~45 sec from ~25 sec
+
+// image of dropout e vs a , e vs l, cnf matc 
